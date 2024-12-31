@@ -3,8 +3,6 @@ package Main;
 import Model.Customer;
 import Model.Room;
 import Service.*;
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -28,7 +26,7 @@ public class Main {
             customerService.getAllCustomer();
             System.out.println("6, Exit");
 
-            int idCus = getValidInteger(input, "Please enter a valid Number (1-6):");
+            int idCus = Validation.getValidInteger(input, "Please enter a valid Number (1-6):");
 
             if (idCus == 6) {
                 check = false;
@@ -54,7 +52,7 @@ public class Main {
                 roomService.getAllRoom();
                 System.out.println("6, Back to Chosen User");
 
-                int room = getValidInteger(input, "Please enter a valid room number (1-6):");
+                int room = Validation.getValidInteger(input, "Please enter a valid room number (1-6):");
 
                 if (room == 6) {
                     checkRoom = false;
@@ -87,10 +85,11 @@ public class Main {
                     hotelService.allHotelSer();
                     System.out.println("6, Check Bill");
 
-                    int hotelServiceID = getValidInteger(input, "Please enter a valid service number (1-6):");
+                    int hotelServiceID = Validation.getValidInteger(input, "Please enter a valid service number (1-6):");
 
                     if (hotelServiceID == 6) {
                         bookingService.NewBills(cus, r);
+                        check= false;
                         checkHotel = false;
                         checkRoom = false;
                         break;
@@ -113,15 +112,5 @@ public class Main {
         }
     }
 
-    public static int getValidInteger(Scanner input, String message) {
-        while (true) {
-            try {
-                System.out.print(message);
-                return input.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                input.next();
-            }
-        }
-    }
+
 }
