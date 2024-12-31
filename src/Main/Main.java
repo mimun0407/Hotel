@@ -4,6 +4,7 @@ import Model.Customer;
 import Model.Room;
 import Service.*;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -11,24 +12,24 @@ public class Main {
     static HotelService hotelService = new HotelService();
     static BookingService bookingService = new BookingService();
     static RoomService roomService = new RoomService();
-    static int idUser=0;
-    static int idRoom=0;
-    static int idHotel=0;
-
-
+    static int idUser = 0;
+    static int idRoom = 0;
+    static int idHotel = 0;
 
     public static void main(String[] args) {
         customerService.addCustomer();
         hotelService.addHotel();
         roomService.add();
-        boolean check=true;
+        boolean check = true;
 
         Scanner input = new Scanner(System.in);
         while (check) {
             System.out.println("---------------------Welcome to my program, Please enter Customer ID: -------------------------------");
             customerService.getAllCustomer();
             System.out.println("6, Exit");
-            int idCus = input.nextInt();
+
+            int idCus = getValidInteger(input, "Please enter a valid Number (1-6):");
+
             if (idCus == 6) {
                 check = false;
                 break;
@@ -49,10 +50,11 @@ public class Main {
             boolean checkRoom = true;
 
             while (checkRoom) {
-                System.out.println("-------------------------please enter room number: --------------------------");
+                System.out.println("-------------------------Please enter room number: --------------------------");
                 roomService.getAllRoom();
                 System.out.println("6, Back to Chosen User");
-                int room = input.nextInt();
+
+                int room = getValidInteger(input, "Please enter a valid room number (1-6):");
 
                 if (room == 6) {
                     checkRoom = false;
@@ -71,28 +73,29 @@ public class Main {
                 }
 
                 Room r = roomService.getRoomById(room);
-                if (r.isBooked()){
-                    System.out.println("This room already booked for this room. Please try again.");
+                if (r.isBooked()) {
+                    System.out.println("This room is already booked. Please try again.");
                     checkRoom = false;
                     break;
-                }
-                else {
+                } else {
                     bookingService.Connect(cus, r);
                 }
 
                 boolean checkHotel = true;
                 while (checkHotel) {
-                    System.out.println("---------------------Do you want to Service------------------?");
+                    System.out.println("---------------------Do you want to use a service?------------------");
                     hotelService.allHotelSer();
                     System.out.println("6, Check Bill");
 
-                    int hotelServiceID = input.nextInt();
+                    int hotelServiceID = getValidInteger(input, "Please enter a valid service number (1-6):");
+
                     if (hotelServiceID == 6) {
                         bookingService.NewBills(cus, r);
                         checkHotel = false;
                         checkRoom = false;
                         break;
                     }
+
 
                     switch (hotelServiceID) {
                         case 1: idHotel = 1; break;
@@ -104,9 +107,20 @@ public class Main {
                             System.out.println("Invalid service number. Please try again.");
                             continue;
                     }
-
                     bookingService.add(r, cus, hotelService.getHotelSer(idHotel));
                 }
+            }
+        }
+    }
+
+    public static int getValidInteger(Scanner input, String message) {
+        while (true) {
+            try {
+                System.out.print(message);
+                return input.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                input.next();
             }
         }
     }

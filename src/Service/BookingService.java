@@ -46,7 +46,6 @@ public class BookingService {
         }
 
         System.out.println("Service price: " + price);
-
         Bill bill = new Bill(billId, room, price, date, customer);
         bills.put(billId, bill);
         room.setBooked(false);

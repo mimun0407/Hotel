@@ -16,7 +16,6 @@ public class HotelService {
     }
     public void allHotelSer(){
         String leftAlignFormat = "| %-17s | %-4d |%6d |%n";
-
         System.out.format("+-------------------+------+--------+%n");
         System.out.format("|  Column name      | ID   |   price  |%n");
         System.out.format("+-------------------+------+--------+%n");
