@@ -4,8 +4,6 @@ import Model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-
 public class BookingService {
     static Map<Integer,Bookings> bookings = new HashMap<>();
     Map<Integer,Bill> bills=new HashMap<>();
@@ -31,6 +29,7 @@ public class BookingService {
     public List<Bookings>getBookings(Customer customer){
         return bookings.values().stream().filter(bookings1 -> bookings1.getCustomer().equals(customer)).toList();
     }
+
     public void NewBills(Customer customer, Room room) {
 
         int billId = bills.isEmpty() ? 1 : Collections.max(bills.keySet()) + 1;
@@ -45,7 +44,7 @@ public class BookingService {
             price += hotelSer.getSer_price();
         }
 
-        System.out.println("Service price: " + price);
+        System.out.println("Service price: " + price +"$");
         Bill bill = new Bill(billId, room, price, date, customer);
         bills.put(billId, bill);
         room.setBooked(false);
@@ -64,5 +63,17 @@ public class BookingService {
         room.setBooked(true);
         RoomCustomer roomCustomer = new RoomCustomer(customer, bookingId, room);
         roomCustomerMap.put(bookingId, roomCustomer);
+    }
+    public  boolean isCustomerExists( Customer inputCustomer) {
+        for (RoomCustomer roomCustomer : roomCustomerMap.values()) {
+            if (roomCustomer.getCustomer().equals(inputCustomer)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public int getRoomId(Customer customer) {
+        RoomCustomer customer1=  roomCustomerMap.values().stream().filter(roomCustomer -> roomCustomer.getCustomer().equals(customer)).toList().getFirst();
+        return customer1.getRoom().getIdRoom();
     }
 }

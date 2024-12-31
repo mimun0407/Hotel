@@ -15,15 +15,15 @@ public class RoomService {
         roomMap.put(5, new Room(5, "Room E",false,300));
     }
     public void getAllRoom(){
-        String leftAlignFormat = "| %-15s | %-4d |%6s |%n";
+        String leftAlignFormat = "| %-15s | %-4d |%6s|%6s|%n";
 
-        System.out.format("+-----------------+------+-------+%n");
-        System.out.format("| Column name     | ID   |booked |%n");
-        System.out.format("+-----------------+------+-------+%n");
+        System.out.format("+-----------------+------+-------+-------+%n");
+        System.out.format("| Column name     | ID   |booked | Price |%n");
+        System.out.format("+-----------------+------+-------+-------+%n");
         for(Room r:roomMap.values()){
-            System.out.format(leftAlignFormat, r.getRoomName(), r.getIdRoom(),r.isBooked());
+            System.out.format(leftAlignFormat, r.getRoomName(), r.getIdRoom(),r.isBooked(),r.getPrice());
         }
-        System.out.format("+-----------------+------+-------+%n");
+        System.out.format("+-----------------+------+-------+-------+%n");
 
     }
     public Room getRoomById(int id){

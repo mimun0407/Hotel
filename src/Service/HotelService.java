@@ -15,7 +15,7 @@ public class HotelService {
         hotelSerMap.put(5, new HotelSer(5, 400, "Airport Shuttle"));
     }
     public void allHotelSer(){
-        String leftAlignFormat = "| %-17s | %-4d |%6d |%n";
+        String leftAlignFormat = "| %-17s | %-4d |%6d $|%n";
         System.out.format("+-------------------+------+--------+%n");
         System.out.format("|  Column name      | ID   |   price  |%n");
         System.out.format("+-------------------+------+--------+%n");

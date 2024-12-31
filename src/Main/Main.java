@@ -18,10 +18,10 @@ public class Main {
         customerService.addCustomer();
         hotelService.addHotel();
         roomService.add();
-        boolean check = true;
+        boolean mainLoop = true;
 
         Scanner input = new Scanner(System.in);
-        while (check) {
+        while (mainLoop) {
             System.out.println("---------------------Welcome to my program, Please enter Customer ID: -------------------------------");
             customerService.getAllCustomer();
             System.out.println("6, Exit");
@@ -29,10 +29,9 @@ public class Main {
             int idCus = Validation.getValidInteger(input, "Please enter a valid Number (1-6):");
 
             if (idCus == 6) {
-                check = false;
+                mainLoop = false;
                 break;
             }
-
             switch (idCus) {
                 case 1: idUser = 1; break;
                 case 2: idUser = 2; break;
@@ -45,72 +44,76 @@ public class Main {
             }
 
             Customer cus = customerService.getCustomerById(idCus);
-            boolean checkRoom = true;
+            if (bookingService.isCustomerExists(cus)) {
+                idRoom = bookingService.getRoomId(cus);
+                System.out.println("Customer already exists. Proceeding with existing booking...");
+            } else {
+                boolean roomLoop = true;
+                while (roomLoop) {
+                    System.out.println("-------------------------Please enter room number: --------------------------");
+                    roomService.getAllRoom();
+                    System.out.println("6, Back to Chosen User");
 
-            while (checkRoom) {
-                System.out.println("-------------------------Please enter room number: --------------------------");
-                roomService.getAllRoom();
-                System.out.println("6, Back to Chosen User");
+                    int room = Validation.getValidInteger(input, "Please enter a valid room number (1-6):");
 
-                int room = Validation.getValidInteger(input, "Please enter a valid room number (1-6):");
-
-                if (room == 6) {
-                    checkRoom = false;
-                    break;
-                }
-
-                switch (room) {
-                    case 1: idRoom = 1; break;
-                    case 2: idRoom = 2; break;
-                    case 3: idRoom = 3; break;
-                    case 4: idRoom = 4; break;
-                    case 5: idRoom = 5; break;
-                    default:
-                        System.out.println("Invalid room number. Please try again.");
-                        continue;
-                }
-
-                Room r = roomService.getRoomById(room);
-                if (r.isBooked()) {
-                    System.out.println("This room is already booked. Please try again.");
-                    checkRoom = false;
-                    break;
-                } else {
-                    bookingService.Connect(cus, r);
-                }
-
-                boolean checkHotel = true;
-                while (checkHotel) {
-                    System.out.println("---------------------Do you want to use a service?------------------");
-                    hotelService.allHotelSer();
-                    System.out.println("6, Check Bill");
-
-                    int hotelServiceID = Validation.getValidInteger(input, "Please enter a valid service number (1-6):");
-
-                    if (hotelServiceID == 6) {
-                        bookingService.NewBills(cus, r);
-                        check= false;
-                        checkHotel = false;
-                        checkRoom = false;
+                    if (room == 6) {
                         break;
                     }
 
-
-                    switch (hotelServiceID) {
-                        case 1: idHotel = 1; break;
-                        case 2: idHotel = 2; break;
-                        case 3: idHotel = 3; break;
-                        case 4: idHotel = 4; break;
-                        case 5: idHotel = 5; break;
+                    switch (room) {
+                        case 1: idRoom = 1; break;
+                        case 2: idRoom = 2; break;
+                        case 3: idRoom = 3; break;
+                        case 4: idRoom = 4; break;
+                        case 5: idRoom = 5; break;
                         default:
-                            System.out.println("Invalid service number. Please try again.");
+                            System.out.println("Invalid room number. Please try again.");
                             continue;
                     }
-                    bookingService.add(r, cus, hotelService.getHotelSer(idHotel));
+
+                    Room r = roomService.getRoomById(idRoom);
+                    if (r.isBooked()) {
+                        System.out.println("This room is already booked. Please try again.");
+                    } else {
+                        bookingService.Connect(cus, r);
+                        roomLoop = false;
+                    }
                 }
+            }
+
+            Room r = roomService.getRoomById(idRoom);
+
+            boolean hotelServiceLoop = true;
+            while (hotelServiceLoop) {
+                System.out.println("---------------------Do you want to use a service?------------------");
+                hotelService.allHotelSer();
+                System.out.println("6, Check Bill");
+                System.out.println("7, Back to Customer Selection");
+
+                int hotelServiceID = Validation.getValidInteger(input, "Please enter a valid service number (1-7):");
+
+                if (hotelServiceID == 6) {
+                    bookingService.NewBills(cus, r);
+                    hotelServiceLoop = false;
+                    mainLoop = false;
+                    break;
+                } else if (hotelServiceID == 7) {
+                    hotelServiceLoop = false;
+                    break;
+                }
+
+                switch (hotelServiceID) {
+                    case 1: idHotel = 1; break;
+                    case 2: idHotel = 2; break;
+                    case 3: idHotel = 3; break;
+                    case 4: idHotel = 4; break;
+                    case 5: idHotel = 5; break;
+                    default:
+                        System.out.println("Invalid service number. Please try again.");
+                        continue;
+                }
+                bookingService.add(r, cus, hotelService.getHotelSer(idHotel));
             }
         }
     }
-
-
 }
